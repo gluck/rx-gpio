@@ -1,0 +1,24 @@
+{
+  "name": "rpi-playground",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "babel-polyfill": "^6.3.14",
+    "onoff": "^1.0.4",
+    "rx": "^4.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta6",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "eslint": "^1.10.3"
+  },
+  "scripts": {
+    "compile": "babel -d lib/ src/"
+  },
+  "main": "lib/index.js",
+  "author": "Francois Valdy",
+  "license": "ISC"
+}

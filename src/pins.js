@@ -81,10 +81,10 @@ var getPinForCurrentMode = getPinRpi;
 var currentPins;
 
 
-export const MODE_RPI = 'mode_rpi';
-export const MODE_BCM = 'mode_bcm';
+const MODE_RPI = 'mode_rpi';
+const MODE_BCM = 'mode_bcm';
 
-export function getPin(channel) {
+function getPin(channel) {
   return getPinForCurrentMode(channel);
 }
 
@@ -93,7 +93,7 @@ export function getPin(channel) {
  *
  * @param {string} mode Pin reference mode, 'mode_rpi' or 'mode_bcm'
  */
-export function setMode(mode) {
+function setMode(mode) {
   if (mode === MODE_RPI) {
     getPinForCurrentMode = getPinRpi;
   } else if (mode === MODE_BCM) {
@@ -102,6 +102,8 @@ export function setMode(mode) {
     throw new Error('Cannot set invalid mode');
   }
 }
+
+export default { MODE_BCM, MODE_RPI, setMode, getPin };
 
 function init() {
   let data = fs.readFileSync('/proc/cpuinfo', 'utf8');

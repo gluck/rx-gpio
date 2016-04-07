@@ -103,12 +103,8 @@ export function setMode(mode) {
   }
 }
 
-export async function init() {
-  if (currentPins) {
-    return;
-  }
-
-  let data = await fs.readFile('/proc/cpuinfo', 'utf8');
+function init() {
+  let data = fs.readFileSync('/proc/cpuinfo', 'utf8');
   // Match the last 4 digits of the number following "Revision:"
   var match = data.match(/Revision\s*:\s*[0-9a-f]*([0-9a-f]{4})/);
   var revisionNumber = parseInt(match[1], 16);
@@ -124,6 +120,9 @@ export async function init() {
 }
 
 function getPinRpi(channel) {
+  if (currentPins == null) {
+    init();
+  }
   return currentPins[channel] + '';
 }
 

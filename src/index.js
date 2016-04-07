@@ -1,6 +1,6 @@
 import { Observable } from 'rx';
 import { Gpio } from 'onoff';
-import Pins from 'pins';
+import { getPin }  from './pins.js';
 
 const debug = require('debug')('rx-rpi-gpio');
 
@@ -8,8 +8,8 @@ const debug = require('debug')('rx-rpi-gpio');
  * sets the given channel to the provided direction/edge, and reports any change to the returned observable<0|1>
  */
 export function rxWatch(channel, direction, edge) {
-  return Observable.concat(Pins.init(), Observable.create((observer) => {
-    let io = new Gpio(Pins.getPin(channel), direction, edge);
+  return Observable.create((observer) => {
+    let io = new Gpio(getPin(channel), direction, edge);
     io.watch(function (err, value) {
       if (err) {
         observer.onError(err);
@@ -18,7 +18,7 @@ export function rxWatch(channel, direction, edge) {
       }
     });
     return () => io.unexport();
-  }));
+  });
 }
 
 /**
@@ -52,7 +52,7 @@ function rxPulseIn(channel, sampletime_ms, trigger_edge) {
       .distinctUntilChanged()
       .flatMap((value) => {
         let ts = new Date().getTime();
-        if (value != trigger_edge)
+        if (value == trigger_edge)
           start = ts;
         else if (start) {
           let duration = ts-start;
@@ -62,7 +62,7 @@ function rxPulseIn(channel, sampletime_ms, trigger_edge) {
             lowpulseoccupancy = 0;
             starttime = ts;
             debug(`Detecting low pulse occupancy ratio on channel ${channel}: ${ratio}%`);
-            return [{ts: ts, lpo: ratio}];
+            return [ratio];
           }
         }
         return [];

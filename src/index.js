@@ -1,6 +1,5 @@
 import { Observable } from 'rx';
 import { Gpio } from 'onoff';
-import Pins  from './pins.js';
 
 const debug = require('debug')('rx-rpi-gpio');
 
@@ -9,7 +8,7 @@ const debug = require('debug')('rx-rpi-gpio');
  */
 function watch(channel, direction, edge) {
   return Observable.create((observer) => {
-    let io = new Gpio(Pins.getPin(channel), direction, edge);
+    let io = new Gpio(channel, direction, edge);
     io.watch(function (err, value) {
       if (err) {
         observer.onError(err);
@@ -63,7 +62,7 @@ function pulseIn(channel, sampletime_ms, trigger_edge) {
             let ratio = 100*lowpulseoccupancy/(ts-starttime);
             lowpulseoccupancy = 0;
             starttime = ts;
-            debug(`Detecting low pulse occupancy ratio on channel ${channel}: ${ratio}%`);
+            debug(`Detecting low pulse occupancy ratio on channel ${channel}: ${ratio.toFixed(2)}%`);
             return [ratio];
           }
         }
